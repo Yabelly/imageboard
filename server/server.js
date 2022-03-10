@@ -6,6 +6,10 @@ const path = require("path");
 const cookieSession = require("cookie-session");
 const { hash, compare } = require("./bc");
 const db = require("../database/db");
+const cryptoRandomString = require("crypto-random-string");
+const secretCode = cryptoRandomString({
+    length: 6,
+});
 
 app.use(compression());
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
@@ -45,6 +49,20 @@ app.post("/registration.json", (req, res) => {
                 res.json({ success: false });
             });
     });
+});
+
+app.post("/password/reset/start", (req, res) => {
+    console.log("POST request /reset");
+    const { email } = req.body;
+    db.verify(email)
+        .then(({ rows }) => {
+            console.log("this exists: ", rows[0]);
+            db.inputCode(secretCode);
+        })
+        .catch((err) => {
+            console.log("user does not exist", err);
+            res.json({ success: false });
+        });
 });
 
 app.post("/login.json", (req, res) => {

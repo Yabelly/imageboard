@@ -30,7 +30,7 @@ export default class Login extends Component {
     handleLogin(e) {
         console.log("user clicked login button");
         e.preventDefault();
-        console.log("this.state: ", this.state);
+        // console.log("this.state: ", this.state);
         fetch("/login.json", {
             method: "POST",
             headers: {
@@ -82,6 +82,9 @@ export default class Login extends Component {
                 </form>
                 <h2>
                     need to register? <Link to="/">click here!</Link>
+                </h2>
+                <h2>
+                    forgot password? <Link to="/reset">click here!</Link>
                 </h2>
             </>
         );

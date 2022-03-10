@@ -25,3 +25,25 @@ module.exports.getLoginInfo = (email) => {
         [email]
     );
 };
+
+module.exports.verify = (email) => {
+    return db.query(
+        `
+        SELECT users.id
+        FROM users
+        WHERE email=$1
+        `,
+        [email]
+    );
+};
+
+module.exports.inputCode = (email, secretCode) => {
+    return db.query(
+        `
+        INSERT INTO reset_code (email, code)
+        VALUES ($1, $2)
+        RETURNING *
+        `,
+        [email, secretCode]
+    );
+};
