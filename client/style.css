@@ -1,3 +1,9 @@
 body {
     background-color: ghostwhite;
 }
+
+.logo {
+    width: 100px;
+    height: 100px;
+    background-color: brown;
+}
