@@ -1,4 +1,5 @@
 import { Component } from "react";
+import { Link } from "react-router-dom";
 export class Registration extends Component {
     constructor() {
         super();
@@ -30,7 +31,6 @@ export class Registration extends Component {
         // console.log("user clicked button");
         e.preventDefault();
         // console.log("this.state: ", this.state);
-        //
         fetch("/registration.json", {
             method: "POST",
             headers: {
@@ -42,11 +42,13 @@ export class Registration extends Component {
             .then((resp) => {
                 if (resp.success == true) {
                     location.reload();
+                } else {
+                    this.setState({ error: "oooohhh shittttt wrong info" });
                 }
             })
             .catch((err) => {
-                "error occured POST registration.json: ", err;
-                this.error = "ohuhhhhh";
+                console.log("error occured POST registration.json: ", err);
+                this.setState({ error: "unsuccesfull retrieving data" });
             });
     }
     render() {
@@ -91,7 +93,9 @@ export class Registration extends Component {
                         Register
                     </button>
                 </form>
-                
+                <h2>
+                    already registered?<Link to="/login"> login here</Link>
+                </h2>
             </>
         );
     }

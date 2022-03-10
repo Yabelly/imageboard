@@ -4,7 +4,7 @@ const app = express();
 const compression = require("compression");
 const path = require("path");
 const cookieSession = require("cookie-session");
-const { hash } = require("./bc");
+const { hash, compare } = require("./bc");
 const db = require("../database/db");
 
 app.use(compression());
@@ -41,10 +41,34 @@ app.post("/registration.json", (req, res) => {
                 res.json({ success: true });
             })
             .catch((err) => {
-                "error in POST /registration.json:  ", err;
+                console.log("error in retrieving db info: ", err);
                 res.json({ success: false });
             });
     });
+});
+
+app.post("/login.json", (req, res) => {
+    const { email, password } = req.body;
+    console.log("POST request /login, req.body.email; ", email);
+    db.getLoginInfo(email)
+        .then((val) => {
+            console.log("val: ", val);
+            compare(password, val.rows[0].password)
+                .then((match) => {
+                    if (match) {
+                        req.session.userId = val.rows[0].id;
+                        res.json({ success: true });
+                    } else {
+                        res.json({ success: false });
+                    }
+                })
+                .catch((err) => {
+                    "error occured comparing passwords: ", err;
+                });
+        })
+        .catch((err) => {
+            "error occured getting email from db: ", err;
+        });
 });
 
 app.get("*", function (req, res) {
