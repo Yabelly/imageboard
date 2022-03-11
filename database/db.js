@@ -59,3 +59,14 @@ module.exports.getResetCode = (email) => {
         [email]
     );
 };
+
+module.exports.changePassword = (hashedPassword, email) => {
+    return db.query(
+        `
+        UPDATE users
+        SET password = $1
+        WHERE email = $2
+        `,
+        [hashedPassword, email]
+    );
+};

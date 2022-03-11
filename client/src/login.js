@@ -78,7 +78,9 @@ export default class Login extends Component {
                         onClick={(e) => {
                             this.handleLogin(e);
                         }}
-                    ></button>
+                    >
+                        login
+                    </button>
                 </form>
                 <h2>
                     need to register? <Link to="/">click here!</Link>

@@ -63,7 +63,7 @@ app.post("/password/reset/start", (req, res) => {
                 db.inputCode(email, secretCode).then(() => {
                     const message = `hey there, you asked to reset your password for this social network, here is the code you need: ${secretCode}. `;
                     const subject = `reset password`;
-                    ses.sendEmail(`jnepveu88@gmail.com`, message, subject);
+                    ses.sendEmail(email, message, subject);
                     res.json({ success: true });
                 });
             }
@@ -83,9 +83,9 @@ app.post("/password/reset/verify", (req, res) => {
             if (code === rows[0].code) {
                 console.log(" it's a match");
                 hash(password)
-                    .then((hashedPassword) => { //i get till here
+                    .then((hashedPassword) => {
                         db.changePassword(hashedPassword, email).then(() => {
-                            res.json({ succes: true });
+                            res.json({ success: true });
                         });
                     })
                     .catch((err) => {
