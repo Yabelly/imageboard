@@ -40,10 +40,22 @@ module.exports.verify = (email) => {
 module.exports.inputCode = (email, secretCode) => {
     return db.query(
         `
-        INSERT INTO reset_code (email, code)
+        INSERT INTO reset_codes (email, code)
         VALUES ($1, $2)
-        RETURNING *
+        RETURNING reset_codes.id
         `,
         [email, secretCode]
+    );
+};
+
+module.exports.getResetCode = (email) => {
+    return db.query(
+        `
+    SELECT * FROM  reset_codes
+    WHERE email=$1 AND CURRENT_TIMESTAMP - timestamp < INTERVAL '10 minutes'
+    ORDER BY timestamp DESC
+    LIMIT 1
+    `,
+        [email]
     );
 };

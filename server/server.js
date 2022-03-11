@@ -7,9 +7,7 @@ const cookieSession = require("cookie-session");
 const { hash, compare } = require("./bc");
 const db = require("../database/db");
 const cryptoRandomString = require("crypto-random-string");
-const secretCode = cryptoRandomString({
-    length: 6,
-});
+const ses = require("./ses");
 
 app.use(compression());
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
@@ -21,10 +19,11 @@ app.use(
     })
 );
 app.use(express.json());
-// app.use((req, res, next) => {
-//     console.log("req.url: ", req.url);
-//     console.log("req.session: ", req.session);
-//     next();
+
+// // app.use((req, res, next) => {
+// //     console.log("req.url: ", req.url);
+// //     console.log("req.session: ", req.session);
+// //     next();
 // });
 //===================import and setup=======================
 
@@ -36,6 +35,7 @@ app.get("/user/id.json", function (req, res) {
 
 app.post("/registration.json", (req, res) => {
     console.log("POST request /registration");
+    console.log("req.body: ", req.body);
     const { first, last, email, password } = req.body;
 
     hash(password).then((hashedPassword) => {
@@ -52,15 +52,53 @@ app.post("/registration.json", (req, res) => {
 });
 
 app.post("/password/reset/start", (req, res) => {
-    console.log("POST request /reset");
+    console.log("POST request /reset/start");
     const { email } = req.body;
     db.verify(email)
         .then(({ rows }) => {
-            console.log("this exists: ", rows[0]);
-            db.inputCode(secretCode);
+            if (rows[0].id) {
+                const secretCode = cryptoRandomString({
+                    length: 6,
+                });
+                db.inputCode(email, secretCode).then(() => {
+                    const message = `hey there, you asked to reset your password for this social network, here is the code you need: ${secretCode}. `;
+                    const subject = `reset password`;
+                    ses.sendEmail(`jnepveu88@gmail.com`, message, subject);
+                    res.json({ success: true });
+                });
+            }
         })
         .catch((err) => {
             console.log("user does not exist", err);
+            res.json({ success: false });
+        });
+});
+
+app.post("/password/reset/verify", (req, res) => {
+    console.log("POST request /reset/verify", req.body);
+    const { code, password, email } = req.body;
+    db.getResetCode(email)
+        .then(({ rows }) => {
+            console.log("rows: ", code, rows);
+            if (code === rows[0].code) {
+                console.log(" it's a match");
+                hash(password)
+                    .then((hashedPassword) => { //i get till here
+                        db.changePassword(hashedPassword, email).then(() => {
+                            res.json({ succes: true });
+                        });
+                    })
+                    .catch((err) => {
+                        console.log("fail 4", err);
+                        res.json({ success: false });
+                    });
+            } else {
+                console.log("fail on else 3");
+                res.json({ success: false });
+            }
+        })
+        .catch((err) => {
+            console.log("fail 2", err);
             res.json({ success: false });
         });
 });

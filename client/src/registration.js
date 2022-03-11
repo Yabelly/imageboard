@@ -14,9 +14,6 @@ export class Registration extends Component {
     }
 
     inputUpdate({ target }) {
-        // console.log("this: ", this);
-        // console.log("updated inputfield: ", target.name);
-        // console.log("user changed update: ", target.value);
         //this func takes an object containging state update that we want to run an optional 2nd arg that is a callback func
         this.setState(
             {
@@ -30,7 +27,7 @@ export class Registration extends Component {
     handleSubmit(e) {
         // console.log("user clicked button");
         e.preventDefault();
-        // console.log("this.state: ", this.state);
+        console.log("this.state: ", this.state);
         fetch("/registration.json", {
             method: "POST",
             headers: {
@@ -43,7 +40,7 @@ export class Registration extends Component {
                 if (resp.success == true) {
                     location.reload();
                 } else {
-                    this.setState({ error: "oooohhh shittttt wrong info" });
+                    this.setState({ error: "oooohhh damn wrong info" });
                 }
             })
             .catch((err) => {
