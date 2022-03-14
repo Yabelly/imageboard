@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom";
 import Welcome from "./welcome";
+import { App } from "./app";
 ReactDOM.render(<Welcome />, document.querySelector("main"));
 
 fetch("/user/id.json")
@@ -9,7 +10,8 @@ fetch("/user/id.json")
             ReactDOM.render(<Welcome />, document.querySelector("main"));
         } else {
             ReactDOM.render(
-                <div className="logo" />,
+                <App />,
+
                 document.querySelector("main")
             );
         }

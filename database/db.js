@@ -15,6 +15,17 @@ module.exports.registration = (first, last, email, hashedPassword) => {
     );
 };
 
+module.exports.getUserInfo = (userId) => {
+    return db.query(
+        `
+        SELECT users.id, users.first,  users.last, users.email, users.profile_pic
+        FROM users
+        WHERE id=$1
+        `,
+        [userId]
+    );
+};
+
 module.exports.getLoginInfo = (email) => {
     return db.query(
         `

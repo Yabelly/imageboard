@@ -14,7 +14,7 @@ app.use(express.static(path.join(__dirname, "..", "client", "public")));
 app.use(
     cookieSession({
         secret: `ultra extreme secure thing`,
-        maxAge: 1000 * 60,
+        maxAge: 1000 * 60 * 60 * 24 * 14,
         sameSite: true,
     })
 );
@@ -30,6 +30,15 @@ app.use(express.json());
 app.get("/user/id.json", function (req, res) {
     res.json({
         userId: req.session.userId,
+    });
+});
+app.get("/user", function (req, res) {
+    console.log("GET request /user");
+    console.log("req.session: ", req.session);
+    const { userId } = req.session;
+    db.getUserInfo(userId).then(({ rows }) => {
+        console.log("rows: ", rows[0]);
+        res.json(rows[0]);
     });
 });
 

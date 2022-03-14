@@ -1,19 +1,70 @@
 import { Component } from "react";
-import { ProfilePic } from "./profile-pic.js";
-import { Logo } from "./logo.js";
+// import { ProfilePic } from "./components/profile-pic.js";
+import Logo from "./logo.js";
+// import { Uploader } from ".uploader.js";
 
 export class App extends Component {
-    componentDidMount() {
-        fetch("/user").then((res)=> {
-            res.json())
-        } // set this up still
+    constructor() {
+        super();
+
+        this.state = {
+            firstName: "",
+            lastName: "",
+            email: "",
+            profilePic: undefined,
+            uploaderVisible: false,
+        };
+
+        // If you don't bind your methods, make sure you use arrow functions
+        // when passing them over to other components to preserve your context
+        this.showUploader = this.showUploader.bind(this);
+        this.hideUploader = this.hideUploader.bind(this);
+        this.updateProfilePic = this.updateProfilePic.bind(this);
     }
+
+    componentDidMount() {
+        console.log("app.js is mounted");
+
+        fetch("/user")
+            .then((res) => res.json())
+            .then((userData) => {
+                console.log("userData: ", userData);
+                const { id, first, last, email, profilePic } = userData;
+                console.log("id: ", id);
+                console.log("profilePic: ", profilePic);
+                this.setState(userData);
+            });
+    }
+
+    showUploader() {
+        this.setState({ uploaderVisible: true });
+    }
+    hideUploader() {
+        // ...
+    }
+    // You could make a toggleUploader method that handles both hiding
+    // and showing
+
+    updateProfilePic(newProfilePicUrl) {
+        // ...
+    }
+
     render() {
         return (
-            <div>
-                App
-                <Logo></Logo>
-                <ProfilePic></ProfilePic>
+            <div id={"app"}>
+                <Logo />
+                {/* <ProfilePic
+                    url={this.state.profilePic}
+                    firstName={this.state.firstName}
+                    lastName={this.state.lastName}
+                    showUploader={this.showUploader}
+                /> */}
+                {/* {this.state.uploaderVisible && (
+                    <Uploader
+                        hideUploader={this.hideUploader}
+                        updateProfilePic={this.updateProfilePic}
+                    />
+                )} */}
             </div>
         );
     }
