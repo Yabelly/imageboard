@@ -1,8 +1,8 @@
 import { Component } from "react";
 
 export class Uploader extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             profilePic: null,
         };
@@ -18,11 +18,7 @@ export class Uploader extends Component {
     handleSubmit(e) {
         e.preventDefault();
         const fd = new FormData();
-
         fd.append("file", this.state.profilePic);
-
-        console.log("this.state.profilepicture: ", this.state.profilePic);
-
         fetch("/upload", {
             method: "POST",
             body: fd,
@@ -30,7 +26,9 @@ export class Uploader extends Component {
             .then((resp) => resp.json())
             .then((resp) => {
                 console.log("resp from upload: ", resp);
-                
+                this.setState({ profilePic: resp.profile_pic });
+                this.props.updateProfilePic(resp.profile_pic);
+                //continue tomorrow! here
             });
         // 2. Create a new form data instance
         // 3. Append your file to it (use the value you stored int the state)

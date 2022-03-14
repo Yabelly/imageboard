@@ -52,6 +52,7 @@ export class App extends Component {
     // and showing
 
     updateProfilePic(newProfilePicUrl) {
+        this.setState({ profilePic: newProfilePicUrl });
         // ...
     }
 
