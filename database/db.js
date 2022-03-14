@@ -81,3 +81,15 @@ module.exports.changePassword = (hashedPassword, email) => {
         [hashedPassword, email]
     );
 };
+
+module.exports.addImage = (id, profile_pic) => {
+    return db.query(
+        `
+        UPDATE users
+        SET profile_pic = $2
+        WHERE id = $1
+        RETURNING *
+`,
+        [id, profile_pic]
+    );
+};

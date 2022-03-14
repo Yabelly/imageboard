@@ -8,6 +8,26 @@ const { hash, compare } = require("./bc");
 const db = require("../database/db");
 const cryptoRandomString = require("crypto-random-string");
 const ses = require("./ses");
+const uidSafe = require("uid-safe");
+const s3 = require("./s3");
+const multer = require("multer");
+const diskStorage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, path.join(__dirname, "uploads"));
+    },
+    filename: function (req, file, callback) {
+        uidSafe(24).then((uid) => {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    },
+});
+console.log("");
+const uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2000000,
+    },
+});
 
 app.use(compression());
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
@@ -41,9 +61,22 @@ app.get("/user", function (req, res) {
         res.json(rows[0]);
     });
 });
-app.post("/upload", (req, res) => {
-    console.log("POST request / upload");
-    console.log("req.body: ", req.body);
+app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
+    console.log("/upload got hit");
+    console.log("req.file: ", req.file);
+    console.log("req.session: ", req.session);
+    db.addImage(
+        req.session.userId,
+        `https://s3.amazonaws.com/spicedling/${req.file.filename}`
+    )
+        .then(({ rows }) => {
+            console.log("rows: ", rows[0]);
+
+            res.json(rows[0]);
+        })
+        .catch((err) => {
+            console.log("error: ", err);
+        });
 });
 app.post("/registration.json", (req, res) => {
     console.log("POST request /registration");
