@@ -41,7 +41,10 @@ app.get("/user", function (req, res) {
         res.json(rows[0]);
     });
 });
-
+app.post("/upload", (req, res) => {
+    console.log("POST request / upload");
+    console.log("req.body: ", req.body);
+});
 app.post("/registration.json", (req, res) => {
     console.log("POST request /registration");
     console.log("req.body: ", req.body);

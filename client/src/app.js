@@ -1,7 +1,7 @@
 import { Component } from "react";
-// import { ProfilePic } from "./components/profile-pic.js";
+import { ProfilePic } from "./profile_pic.js";
 import Logo from "./logo.js";
-// import { Uploader } from ".uploader.js";
+import { Uploader } from "./uploader.js";
 
 export class App extends Component {
     constructor() {
@@ -32,11 +32,17 @@ export class App extends Component {
                 const { id, first, last, email, profilePic } = userData;
                 console.log("id: ", id);
                 console.log("profilePic: ", profilePic);
-                this.setState(userData);
+                this.setState({
+                    firstName: first,
+                    lastName: last,
+                    email: email,
+                    profilePic: profilePic,
+                });
             });
     }
 
     showUploader() {
+        console.log("showuploader set to true");
         this.setState({ uploaderVisible: true });
     }
     hideUploader() {
@@ -53,18 +59,18 @@ export class App extends Component {
         return (
             <div id={"app"}>
                 <Logo />
-                {/* <ProfilePic
+                <ProfilePic
                     url={this.state.profilePic}
                     firstName={this.state.firstName}
                     lastName={this.state.lastName}
                     showUploader={this.showUploader}
-                /> */}
-                {/* {this.state.uploaderVisible && (
+                />
+                {this.state.uploaderVisible && (
                     <Uploader
                         hideUploader={this.hideUploader}
                         updateProfilePic={this.updateProfilePic}
                     />
-                )} */}
+                )}
             </div>
         );
     }
