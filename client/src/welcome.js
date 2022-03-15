@@ -6,7 +6,7 @@ export default function Welcome() {
     return (
         <>
             <BrowserRouter>
-                <h1>Welcom to this medium level social network</h1>
+                <h1>Welcome to this medium level social network</h1>
                 <Route exact path="/">
                     <Registration></Registration>
                 </Route>

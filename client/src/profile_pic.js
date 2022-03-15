@@ -1,12 +1,10 @@
-export function ProfilePic({
-    url = "./images/defaultprofile.jpeg",
-    firstName,
-    lastName,
-    showUploader,
-}) {
+export function ProfilePic({ url, firstName, lastName, showUploader }) {
     return (
-        <div id={"profile-pic"} onClick={showUploader}>
-            <img alt={`${firstName} ${lastName}`} src={url} />
+        <div className="profile-pic" onClick={showUploader}>
+            <img
+                alt={`${firstName} ${lastName}`}
+                src={url || "/images/defaultprofile.jpeg"}
+            />
         </div>
     );
 }

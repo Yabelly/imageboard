@@ -28,8 +28,12 @@ export class Uploader extends Component {
                 console.log("resp from upload: ", resp);
                 this.setState({ profilePic: resp.profile_pic });
                 this.props.updateProfilePic(resp.profile_pic);
-                //continue tomorrow! here
+                this.props.hideUploader();
+            })
+            .catch((err) => {
+                console.log("error in upload profilepicture: ", err);
             });
+
         // 2. Create a new form data instance
         // 3. Append your file to it (use the value you stored int the state)
         // 4. Send data over to the server with a fetch request
@@ -49,6 +53,9 @@ export class Uploader extends Component {
                     />
                     <button>Upload</button>
                 </form>
+                <div className="close" onClick={this.props.hideUploader}>
+                    close
+                </div>
             </div>
         );
     }

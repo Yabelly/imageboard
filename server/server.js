@@ -96,6 +96,17 @@ app.post("/registration.json", (req, res) => {
     });
 });
 
+app.post("/draftbio.json", (req, res) => {
+    console.log("POST request /draftBio");
+    db.addBioInfo(req.session.userId, req.body.draftBio)
+        .then(({ rows }) => {
+            res.json(rows[0].bio);
+        })
+        .catch((err) => {
+            console.log("upload bio serverside failed, err: ", err);
+        });
+});
+
 app.post("/password/reset/start", (req, res) => {
     console.log("POST request /reset/start");
     const { email } = req.body;

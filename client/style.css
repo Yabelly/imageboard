@@ -1,3 +1,43 @@
 body {
     background-color: orange;
 }
+
+header {
+    background-color: aquamarine;
+    display: flex;
+    justify-content: space-between;
+    height: 100px;
+    position: relative;
+}
+.header-logo {
+    display: inline;
+}
+
+header .profile-pic img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+#uploader {
+    z-index: 1;
+    position: fixed;
+    top: 200px;
+    left: 200px;
+    background-color: white;
+    border: 5px solid black;
+    height: 100px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close {
+    width: 50px;
+    height: 30px;
+    background-color: black;
+    top: 0;
+    right: 0;
+    color: white;
+}

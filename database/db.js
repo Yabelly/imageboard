@@ -93,3 +93,15 @@ module.exports.addImage = (id, profile_pic) => {
         [id, profile_pic]
     );
 };
+
+module.exports.addBioInfo = (id, bio) => {
+    return db.query(
+        `
+        UPDATE users
+        SET bio = $2
+        WHERE id = $1
+        RETURNING *
+        `,
+        [id, bio]
+    );
+};

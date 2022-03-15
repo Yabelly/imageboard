@@ -2,6 +2,7 @@ import { Component } from "react";
 import { ProfilePic } from "./profile_pic.js";
 import Logo from "./logo.js";
 import { Uploader } from "./uploader.js";
+import { Profile } from "./profile.js";
 
 export class App extends Component {
     constructor() {
@@ -13,13 +14,13 @@ export class App extends Component {
             email: "",
             profilePic: undefined,
             uploaderVisible: false,
+            bio: "",
         };
 
-        // If you don't bind your methods, make sure you use arrow functions
-        // when passing them over to other components to preserve your context
         this.showUploader = this.showUploader.bind(this);
         this.hideUploader = this.hideUploader.bind(this);
         this.updateProfilePic = this.updateProfilePic.bind(this);
+        this.setBio = this.setBio.bind(this);
     }
 
     componentDidMount() {
@@ -29,49 +30,63 @@ export class App extends Component {
             .then((res) => res.json())
             .then((userData) => {
                 console.log("userData: ", userData);
-                const { id, first, last, email, profilePic } = userData;
+                const { id, first, last, email, profile_pic } = userData;
                 console.log("id: ", id);
-                console.log("profilePic: ", profilePic);
+                console.log("profilePic: ", profile_pic);
                 this.setState({
                     firstName: first,
                     lastName: last,
                     email: email,
-                    profilePic: profilePic,
+                    profilePic: profile_pic,
                 });
             });
     }
 
     showUploader() {
-        console.log("showuploader set to true");
         this.setState({ uploaderVisible: true });
     }
     hideUploader() {
-        // ...
+        this.setState({ uploaderVisible: false });
     }
-    // You could make a toggleUploader method that handles both hiding
-    // and showing
 
     updateProfilePic(newProfilePicUrl) {
         this.setState({ profilePic: newProfilePicUrl });
-        // ...
     }
-
+    setBio(newBio) {
+        console.log("setBio method activated");
+        this.setState({ bio: newBio });
+    }
     render() {
         return (
-            <div id={"app"}>
-                <Logo />
-                <ProfilePic
-                    url={this.state.profilePic}
-                    firstName={this.state.firstName}
-                    lastName={this.state.lastName}
-                    showUploader={this.showUploader}
-                />
+            <div id="app">
+                <header>
+                    <Logo id="logo" />
+
+                    <h1>Non-style Social Network </h1>
+
+                    <ProfilePic
+                        id="header-image"
+                        url={this.state.profilePic}
+                        firstName={this.state.firstName}
+                        lastName={this.state.lastName}
+                    />
+                </header>
+
                 {this.state.uploaderVisible && (
                     <Uploader
                         hideUploader={this.hideUploader}
                         updateProfilePic={this.updateProfilePic}
                     />
                 )}
+
+                <Profile
+                    url={this.state.profilePic}
+                    firstName={this.state.firstName}
+                    lastName={this.state.lastName}
+                    showUploader={this.showUploader}
+                    bio={this.state.bio}
+                    setBio={this.setBio}
+                ></Profile>
             </div>
         );
     }
