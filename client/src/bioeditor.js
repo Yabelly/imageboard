@@ -27,7 +27,6 @@ export class BioEditor extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log("this.state: ", this.state);
         fetch("/draftbio.json", {
             method: "POST",
             headers: {
@@ -44,7 +43,6 @@ export class BioEditor extends Component {
             });
     }
     render() {
-        console.log("props bioeditor: ", this.props);
         return (
             <>
                 {this.state.editMode && (

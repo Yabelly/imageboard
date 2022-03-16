@@ -3,6 +3,8 @@ import { ProfilePic } from "./profile_pic.js";
 import Logo from "./logo.js";
 import { Uploader } from "./uploader.js";
 import { Profile } from "./profile.js";
+import { BrowserRouter, Route } from "react-router-dom";
+import { FindPeople } from "./findpeople.js";
 
 export class App extends Component {
     constructor() {
@@ -26,13 +28,10 @@ export class App extends Component {
     componentDidMount() {
         console.log("app.js is mounted");
 
-        fetch("/user")
+        fetch("/api/user")
             .then((res) => res.json())
             .then((userData) => {
-                console.log("userData: ", userData);
-                const { id, first, last, email, profile_pic, bio } = userData;
-                console.log("id: ", id);
-                
+                const { first, last, email, profile_pic, bio } = userData;
                 this.setState({
                     firstName: first,
                     lastName: last,
@@ -54,40 +53,46 @@ export class App extends Component {
         this.setState({ profilePic: newProfilePicUrl });
     }
     setBio(newBio) {
-        console.log("setBio method activated");
         this.setState({ bio: newBio });
     }
     render() {
         return (
             <div id="app">
-                <header>
-                    <Logo id="logo" />
+                <BrowserRouter>
+                    <header>
+                        <Logo id="logo" />
 
-                    <h1>Non-style Social Network </h1>
+                        <h1>Non-style Social Network </h1>
 
-                    <ProfilePic
-                        id="header-image"
-                        url={this.state.profilePic}
-                        firstName={this.state.firstName}
-                        lastName={this.state.lastName}
-                    />
-                </header>
-                <div className="profile-area">
-                    {this.state.uploaderVisible && (
-                        <Uploader
-                            hideUploader={this.hideUploader}
-                            updateProfilePic={this.updateProfilePic}
+                        <ProfilePic
+                            id="header-image"
+                            url={this.state.profilePic}
+                            firstName={this.state.firstName}
+                            lastName={this.state.lastName}
                         />
-                    )}
-                    <Profile
-                        url={this.state.profilePic}
-                        firstName={this.state.firstName}
-                        lastName={this.state.lastName}
-                        showUploader={this.showUploader}
-                        bio={this.state.bio}
-                        setBio={this.setBio}
-                    ></Profile>
-                </div>
+                    </header>
+                    <div className="profile-area">
+                        {this.state.uploaderVisible && (
+                            <Uploader
+                                hideUploader={this.hideUploader}
+                                updateProfilePic={this.updateProfilePic}
+                            />
+                        )}
+                        <Route exact path="/">
+                            <Profile
+                                url={this.state.profilePic}
+                                firstName={this.state.firstName}
+                                lastName={this.state.lastName}
+                                showUploader={this.showUploader}
+                                bio={this.state.bio}
+                                setBio={this.setBio}
+                            ></Profile>
+                        </Route>
+                        <Route path="/users">
+                            <FindPeople></FindPeople>
+                        </Route>
+                    </div>
+                </BrowserRouter>
             </div>
         );
     }

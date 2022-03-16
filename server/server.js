@@ -52,15 +52,29 @@ app.get("/user/id.json", function (req, res) {
         userId: req.session.userId,
     });
 });
-app.get("/user", function (req, res) {
-    console.log("GET request /user");
-    console.log("req.session: ", req.session);
+app.get("/api/user", function (req, res) {
+    console.log("GET request /api/user");
     const { userId } = req.session;
     db.getUserInfo(userId).then(({ rows }) => {
-        console.log("rows: ", rows[0]);
         res.json(rows[0]);
     });
 });
+
+app.get("/api/recentusers.json", (req, res) => {
+    console.log("Get request /api/recentusers");
+    db.findRecentUsers().then(({ rows }) => {
+        res.json(rows);
+    });
+});
+
+app.get("/api/finduser/:searchterm", (req, res) => {
+    // req.params.searchterm
+    console.log("Get request /api/finduser: ");
+    db.findUsersByName(req.params.searchterm).then(({ rows }) => {
+        res.json(rows);
+    });
+});
+
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
     console.log("/upload got hit");
     console.log("req.file: ", req.file);

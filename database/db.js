@@ -105,3 +105,26 @@ module.exports.addBioInfo = (id, bio) => {
         [id, bio]
     );
 };
+
+module.exports.findUsersByName = (name) => {
+    return db.query(
+        `
+        SELECT users.id, users.first, users.last, users.profile_pic, users.bio
+        FROM users
+        WHERE first ILIKE $1
+        OR last ILIKE $1
+
+`,
+        [name + "%"]
+    );
+};
+module.exports.findRecentUsers = () => {
+    return db.query(
+        `
+        SELECT users.id, users.first, users.last, users.profile_pic, users.bio
+        FROM users
+        ORDER BY users.created_at DESC
+        LIMIT 3
+        `
+    );
+};
