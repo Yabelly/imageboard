@@ -30,14 +30,15 @@ export class App extends Component {
             .then((res) => res.json())
             .then((userData) => {
                 console.log("userData: ", userData);
-                const { id, first, last, email, profile_pic } = userData;
+                const { id, first, last, email, profile_pic, bio } = userData;
                 console.log("id: ", id);
-                console.log("profilePic: ", profile_pic);
+                
                 this.setState({
                     firstName: first,
                     lastName: last,
                     email: email,
                     profilePic: profile_pic,
+                    bio: bio,
                 });
             });
     }
@@ -71,22 +72,22 @@ export class App extends Component {
                         lastName={this.state.lastName}
                     />
                 </header>
-
-                {this.state.uploaderVisible && (
-                    <Uploader
-                        hideUploader={this.hideUploader}
-                        updateProfilePic={this.updateProfilePic}
-                    />
-                )}
-
-                <Profile
-                    url={this.state.profilePic}
-                    firstName={this.state.firstName}
-                    lastName={this.state.lastName}
-                    showUploader={this.showUploader}
-                    bio={this.state.bio}
-                    setBio={this.setBio}
-                ></Profile>
+                <div className="profile-area">
+                    {this.state.uploaderVisible && (
+                        <Uploader
+                            hideUploader={this.hideUploader}
+                            updateProfilePic={this.updateProfilePic}
+                        />
+                    )}
+                    <Profile
+                        url={this.state.profilePic}
+                        firstName={this.state.firstName}
+                        lastName={this.state.lastName}
+                        showUploader={this.showUploader}
+                        bio={this.state.bio}
+                        setBio={this.setBio}
+                    ></Profile>
+                </div>
             </div>
         );
     }

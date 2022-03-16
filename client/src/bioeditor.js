@@ -5,6 +5,7 @@ export class BioEditor extends Component {
         this.state = {
             editMode: false,
             draftBio: "",
+            bio: "",
         };
         this.addBio = this.addBio.bind(this);
         this.inputUpdate = this.inputUpdate.bind(this);

@@ -18,7 +18,7 @@ module.exports.registration = (first, last, email, hashedPassword) => {
 module.exports.getUserInfo = (userId) => {
     return db.query(
         `
-        SELECT users.id, users.first,  users.last, users.email, users.profile_pic
+        SELECT users.id, users.first,  users.last, users.email, users.profile_pic, users.bio
         FROM users
         WHERE id=$1
         `,
