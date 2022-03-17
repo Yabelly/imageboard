@@ -35,24 +35,25 @@ export function FindPeople() {
         <section>
             <h3>Find other users!</h3>
             <input type="text" onChange={handleChange} />
-
-            {users.map((user) => (
-                <div
-                    key={user.id}
-                    // onClick={somepath like: /user/ + user.id}
-                    className="profile"
-                >
-                    <div className="username">
-                        {user.first}&nbsp;
-                        {user.last}
-                    </div>
-                    <Link to={`/user/${user.id}`}>
-                        <div className="profile-image">
-                            <img src={user.profile_pic}></img>
+            <div className="grid">
+                {users.map((user) => (
+                    <div
+                        key={user.id}
+                        // onClick={somepath like: /user/ + user.id}
+                        className="profile"
+                    >
+                        <div className="username">
+                            {user.first}&nbsp;
+                            {user.last}
                         </div>
-                    </Link>
-                </div>
-            ))}
+                        <Link to={`/user/${user.id}`}>
+                            <div className="profile-image">
+                                <img src={user.profile_pic}></img>
+                            </div>
+                        </Link>
+                    </div>
+                ))}
+            </div>
         </section>
     );
 }
