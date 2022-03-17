@@ -5,7 +5,7 @@ export default function () {
     };
     return (
         <>
-            <img className="logo" src="./images/logo.jpg" style={styling}></img>
+            <img className="logo" src="/images/logo.jpg" style={styling}></img>
         </>
     );
 }

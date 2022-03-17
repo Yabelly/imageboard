@@ -113,11 +113,24 @@ module.exports.findUsersByName = (name) => {
         FROM users
         WHERE first ILIKE $1
         OR last ILIKE $1
+        LIMIT 9
 
 `,
         [name + "%"]
     );
 };
+
+module.exports.findUserById = (otherUserId) => {
+    return db.query(
+        `
+        SELECT users.first, users.last, users.profile_pic, users.bio
+        FROM users
+        WHERE users.id = $1
+        `,
+        [otherUserId]
+    );
+};
+
 module.exports.findRecentUsers = () => {
     return db.query(
         `

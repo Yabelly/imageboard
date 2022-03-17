@@ -5,6 +5,9 @@ import { Uploader } from "./uploader.js";
 import { Profile } from "./profile.js";
 import { BrowserRouter, Route } from "react-router-dom";
 import { FindPeople } from "./findpeople.js";
+import { OtherProfile } from "./otherprofile.js";
+import { Link } from "react-router-dom";
+
 
 export class App extends Component {
     constructor() {
@@ -71,6 +74,12 @@ export class App extends Component {
                             lastName={this.state.lastName}
                         />
                     </header>
+                    <nav>
+                        <h3>Go to</h3>
+                        <Link to="/">home</Link> <br></br>
+                        <Link to="/users/">find users</Link>
+                        <br></br>
+                    </nav>
                     <div className="profile-area">
                         {this.state.uploaderVisible && (
                             <Uploader
@@ -90,6 +99,9 @@ export class App extends Component {
                         </Route>
                         <Route path="/users">
                             <FindPeople></FindPeople>
+                        </Route>
+                        <Route path="/user/:otherUserId">
+                            <OtherProfile />
                         </Route>
                     </div>
                 </BrowserRouter>

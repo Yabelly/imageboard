@@ -10,7 +10,7 @@ export class Profile extends Component {
             <>
                 <div id="username">
                     <h1>
-                        {this.props.firstName}
+                        {this.props.firstName}&nbsp;
                         {this.props.lastName}
                     </h1>
                 </div>

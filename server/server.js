@@ -47,11 +47,7 @@ app.use(express.json());
 // });
 //===================import and setup=======================
 
-app.get("/user/id.json", function (req, res) {
-    res.json({
-        userId: req.session.userId,
-    });
-});
+
 app.get("/api/user", function (req, res) {
     console.log("GET request /api/user");
     const { userId } = req.session;
@@ -73,6 +69,24 @@ app.get("/api/finduser/:searchterm", (req, res) => {
     db.findUsersByName(req.params.searchterm).then(({ rows }) => {
         res.json(rows);
     });
+});
+
+app.get("/api/otheruser/:otheruserid", (req, res) => {
+    console.log("GET request /api/otheruser: ", req.params.otheruserid);
+    console.log("req.session: ", req.session);
+
+    if (req.params.otheruserid == req.session.userId) {
+        res.json({ success: false });
+    } else {
+        db.findUserById(req.params.otheruserid).then(({ rows }) => {
+            console.log("rows: ", rows);
+            if (!rows[0]) {
+                res.json({ success: false });
+            } else {
+                res.json(rows[0]);
+            }
+        });
+    }
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
@@ -195,6 +209,12 @@ app.post("/login.json", (req, res) => {
         .catch((err) => {
             "error occured getting email from db: ", err;
         });
+});
+
+app.get("/user/id.json", function (req, res) {
+    res.json({
+        userId: req.session.userId,
+    });
 });
 
 app.get("*", function (req, res) {
