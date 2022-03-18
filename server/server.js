@@ -47,7 +47,6 @@ app.use(express.json());
 // });
 //===================import and setup=======================
 
-
 app.get("/api/user", function (req, res) {
     console.log("GET request /api/user");
     const { userId } = req.session;
@@ -87,6 +86,18 @@ app.get("/api/otheruser/:otheruserid", (req, res) => {
             }
         });
     }
+});
+
+app.get("/api/friendshipstatus/:otheruserid", (req, res) => {
+    console.log(
+        "GET request /api/friendshipstatus/otheruserid: ",
+        req.params.otheruserid
+    );
+    console.log("req.session: ", req.session);
+    db.findFriendshipStatusById(req.params.otheruserid).then(({ rows }) => {
+        console.log("rows: ", rows);
+        res.json(rows[0]);
+    });
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {

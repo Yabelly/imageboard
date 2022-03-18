@@ -35,13 +35,19 @@ export function FindPeople() {
         <section>
             <h3>Find other users!</h3>
             <input type="text" onChange={handleChange} />
+            {!searchTerm && (
+                <div>
+                    <h5>Most recent people who joined the network</h5>
+                </div>
+            )}
+            {searchTerm && (
+                <div>
+                    <h5>your search:</h5>
+                </div>
+            )}
             <div className="grid">
                 {users.map((user) => (
-                    <div
-                        key={user.id}
-                        // onClick={somepath like: /user/ + user.id}
-                        className="profile"
-                    >
+                    <div key={user.id} className="profile">
                         <div className="username">
                             {user.first}&nbsp;
                             {user.last}

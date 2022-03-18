@@ -45,7 +45,7 @@ export class BioEditor extends Component {
     render() {
         return (
             <>
-                {this.state.editMode && (
+                {this.state.editMode && ( // is bio being edited --> if yes: this runs
                     <div>
                         <textarea
                             defaultValue={this.props.bio}
@@ -60,13 +60,13 @@ export class BioEditor extends Component {
                         </button>
                     </div>
                 )}
-                {!this.state.editMode && this.props.bio && (
+                {!this.state.editMode && this.props.bio && ( // is there a bio already?--> if yes: this runs 
                     <div>
                         {this.props.bio}
                         <button onClick={this.addBio}>edit</button>
                     </div>
                 )}
-                {!this.state.editMode && !this.props.bio && (
+                {!this.state.editMode && !this.props.bio && ( // there is no editing and no saved bio --> this runs
                     <div>
                         No available bio, do you want to add this?
                         <button onClick={this.addBio}>Add</button>

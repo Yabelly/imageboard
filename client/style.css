@@ -20,7 +20,6 @@ header {
 
 .profile {
     background-color: #cdd6dd;
-
     flex-direction: column;
     justify-content: space-between;
     width: 250px;

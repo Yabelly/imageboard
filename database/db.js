@@ -141,3 +141,14 @@ module.exports.findRecentUsers = () => {
         `
     );
 };
+
+module.exports.findFriendshipStatusById = (otherUserId) => {
+    return db.query(
+        `
+        SELECT friendships.sender_id, friendships.recipient_id, friendships.accepted
+        FROM friendships
+        WHERE 
+        `,
+        [otheruserid]
+    );
+};

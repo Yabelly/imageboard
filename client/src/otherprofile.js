@@ -36,7 +36,7 @@ export function OtherProfile() {
 
     return (
         <div>
-            <div>
+            <div className="profile">
                 <div>
                     <h2>
                         {otherUser.first}&nbsp;
