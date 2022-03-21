@@ -1,28 +1,44 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router";
 
 export function FriendButton() {
-    // state stuff
-    //useffect
-    const [friendship, setFriendship] = useState(""); //"" = no friends, "false", "true"
+    const [friendshipStatus, setFriendshipStatus] = useState(); //"" = no friends, "false", "true"
+    const [buttonStatus, setButtonStatus] = useState();
+
     const { otherUserId } = useParams();
+
+    console.log("otherUserId: ", otherUserId);
+    console.log("friendshipStatus: ", friendshipStatus);
 
     useEffect(() => {
         let abort = false;
-        console.log("otherUserId: ", otherUserId);
-        (async () => {
-            const data = await fetch(
-                `/api/friendshipstatus/${otherUserId}`
-            ).then((resp) => {
-                return resp.json();
-            });
-            console.log("data: ", data);
-            setFriendship(data);
-        })();
 
-        return () => {
-            abort = true;
-        };
-    });
+        if (!abort) {
+            (async () => {
+                const data = await fetch(
+                    `/api/friendshipstatus/${otherUserId}`
+                ).then((resp) => {
+                    console.log("i got something back");
+                    return resp.json();
+                });
+                console.log("early data: ", data);
+                if (data.success == false) {
+                   
 
-    return <></>;
+                    return () => {
+                        abort = true;
+                    };
+                } else {
+                    setFriendshipStatus(data);
+                }
+            })();
+        }
+    }, []);
+
+    return (
+        <>
+            {!friendshipStatus && <button>send friend request</button>}
+            
+        </>
+    );
 }

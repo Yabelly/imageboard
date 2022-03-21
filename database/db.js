@@ -123,7 +123,7 @@ module.exports.findUsersByName = (name) => {
 module.exports.findUserById = (otherUserId) => {
     return db.query(
         `
-        SELECT users.first, users.last, users.profile_pic, users.bio
+        SELECT users.first, users.last, users.profile_pic, users.bio, users.id
         FROM users
         WHERE users.id = $1
         `,
@@ -147,8 +147,8 @@ module.exports.findFriendshipStatusById = (otherUserId) => {
         `
         SELECT friendships.sender_id, friendships.recipient_id, friendships.accepted
         FROM friendships
-        WHERE 
+        WHERE friendships.sender_id = $1
         `,
-        [otheruserid]
+        [otherUserId]
     );
 };

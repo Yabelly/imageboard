@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router";
+import { BrowserRouter, Route } from "react-router-dom";
+import { FriendButton } from "./friendbutton";
 
 export function OtherProfile() {
     const [otherUser, setOtherUser] = useState([]);
@@ -10,8 +12,6 @@ export function OtherProfile() {
 
     useEffect(() => {
         let abort = false;
-        console.log("OtherProfile got rendered");
-        console.log("otherUserId: ", otherUserId);
 
         if (!abort) {
             (async () => {
@@ -23,7 +23,7 @@ export function OtherProfile() {
                 if (data.success == false) {
                     history.push("/");
                 }
-                console.log("this is data: ", data);
+
                 setOtherUser(data);
             })();
         }
@@ -31,8 +31,6 @@ export function OtherProfile() {
             abort = true;
         };
     }, []);
-
-    console.log("otherUser: ", otherUser);
 
     return (
         <div>
@@ -48,6 +46,11 @@ export function OtherProfile() {
                 </div>
                 <div>{otherUser.bio}</div>
             </div>
+            <BrowserRouter>
+                <Route path="/user/:otherUserId">
+                    <FriendButton></FriendButton>
+                </Route>
+            </BrowserRouter>
         </div>
     );
 }

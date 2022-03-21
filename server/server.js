@@ -71,14 +71,13 @@ app.get("/api/finduser/:searchterm", (req, res) => {
 });
 
 app.get("/api/otheruser/:otheruserid", (req, res) => {
-    console.log("GET request /api/otheruser: ", req.params.otheruserid);
-    console.log("req.session: ", req.session);
+    // console.log("GET request /api/otheruser: ", req.params.otheruserid);
+    // console.log("req.session: ", req.session);
 
     if (req.params.otheruserid == req.session.userId) {
         res.json({ success: false });
     } else {
         db.findUserById(req.params.otheruserid).then(({ rows }) => {
-            console.log("rows: ", rows);
             if (!rows[0]) {
                 res.json({ success: false });
             } else {
@@ -93,11 +92,21 @@ app.get("/api/friendshipstatus/:otheruserid", (req, res) => {
         "GET request /api/friendshipstatus/otheruserid: ",
         req.params.otheruserid
     );
-    console.log("req.session: ", req.session);
-    db.findFriendshipStatusById(req.params.otheruserid).then(({ rows }) => {
-        console.log("rows: ", rows);
-        res.json(rows[0]);
-    });
+
+    db.findFriendshipStatusById(req.params.otheruserid)
+        .then(({ rows }) => {
+            console.log("rows finder: ", rows);
+            if (!rows[0]) {
+                console.log("no rows");
+                res.json({ success: false });
+            } else {
+                console.log("rows: ", rows);
+                res.json(rows[0]);
+            }
+        })
+        .catch((err) => {
+            "err", err;
+        });
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
