@@ -142,13 +142,50 @@ module.exports.findRecentUsers = () => {
     );
 };
 
-module.exports.findFriendshipStatusById = (otherUserId) => {
+module.exports.findFriendshipStatusById = (myId, otherUserId) => {
     return db.query(
         `
         SELECT friendships.sender_id, friendships.recipient_id, friendships.accepted
         FROM friendships
-        WHERE friendships.sender_id = $1
+        WHERE (recipient_id = $1 AND sender_id = $2)
+        OR (recipient_id = $2 AND sender_id = $1)
         `,
-        [otherUserId]
+        [myId, otherUserId]
+    );
+};
+
+module.exports.makeFalse = (sender_id, recipient_id) => {
+    return db.query(
+        `
+        INSERT INTO friendships (sender_id, recipient_id, accepted)
+        VALUES ($1, $2, $3)
+        RETURNING *
+
+`,
+        [sender_id, recipient_id, false]
+    );
+};
+module.exports.makeTrue = (sender_id, recipient_id) => {
+    return db.query(
+        `
+    UPDATE friendships
+    SET accepted = $3
+    WHERE (recipient_id = $1 AND sender_id = $2)
+  OR (recipient_id = $2 AND sender_id = $1)
+  RETURNING *
+    `,
+        [sender_id, recipient_id, true]
+    );
+};
+
+module.exports.deleteFriend = (sender_id, recipient_id) => {
+    return db.query(
+        `
+        DELETE FROM friendships
+        WHERE (recipient_id = $1 AND sender_id = $2)
+         OR (recipient_id = $2 AND sender_id = $1)
+    
+        `,
+        [sender_id, recipient_id]
     );
 };

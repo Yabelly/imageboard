@@ -17,7 +17,6 @@ export function FindPeople() {
                         return resp.json();
                     }
                 );
-                console.log("result from fetch: ", data);
                 setUsers(data);
             } else {
                 const data = await fetch(`/api/finduser/${searchTerm}`).then(

@@ -2,13 +2,26 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 
 export function FriendButton() {
-    const [friendshipStatus, setFriendshipStatus] = useState(); //"" = no friends, "false", "true"
-    const [buttonStatus, setButtonStatus] = useState();
+    const [friendshipStatus, setFriendshipStatus] = useState(1); //1 = no friends, 2 pending, 3 friend
 
     const { otherUserId } = useParams();
 
-    console.log("otherUserId: ", otherUserId);
     console.log("friendshipStatus: ", friendshipStatus);
+
+    function handleClick() {
+        fetch("/api/postfriendship", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ otherUserId, friendshipStatus }),
+        })
+            .then((resp) => {
+                return resp.json();
+            })
+            .then((data) => {
+                console.log("data: ", data);
+                setFriendshipStatus(data.status);
+            });
+    }
 
     useEffect(() => {
         let abort = false;
@@ -18,27 +31,40 @@ export function FriendButton() {
                 const data = await fetch(
                     `/api/friendshipstatus/${otherUserId}`
                 ).then((resp) => {
-                    console.log("i got something back");
                     return resp.json();
                 });
-                console.log("early data: ", data);
-                if (data.success == false) {
-                   
-
-                    return () => {
-                        abort = true;
-                    };
-                } else {
-                    setFriendshipStatus(data);
-                }
+                console.log("data: ", data);
+                setFriendshipStatus(data.status);
+                return () => {
+                    abort = true;
+                };
             })();
         }
     }, []);
 
-    return (
-        <>
-            {!friendshipStatus && <button>send friend request</button>}
-            
-        </>
-    );
+    if (friendshipStatus == 1) {
+        return (
+            <>
+                <button onClick={handleClick}>send friend request</button>
+            </>
+        );
+    } else if (friendshipStatus == 2) {
+        return (
+            <>
+                <button onClick={handleClick}>accept friend request</button>
+            </>
+        );
+    } else if (friendshipStatus == 3) {
+        return (
+            <>
+                <button onClick={handleClick}>Cancel friendship request</button>
+            </>
+        );
+    } else if (friendshipStatus == 4) {
+        return (
+            <>
+                <button onClick={handleClick}>unfriend</button>
+            </>
+        );
+    }
 }

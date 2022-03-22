@@ -93,26 +93,71 @@ app.get("/api/friendshipstatus/:otheruserid", (req, res) => {
         req.params.otheruserid
     );
 
-    db.findFriendshipStatusById(req.params.otheruserid)
+    db.findFriendshipStatusById(req.session.userId, req.params.otheruserid)
         .then(({ rows }) => {
-            console.log("rows finder: ", rows);
+            console.log("what is rows: ", rows);
             if (!rows[0]) {
-                console.log("no rows");
-                res.json({ success: false });
+                res.json({ status: 1, userId: req.session.userId });
+            } else if (
+                !rows[0].accepted &&
+                req.session.userId === rows[0].sender_id
+            ) {
+                res.json({ status: 3 });
+            } else if (rows[0].accepted) {
+                res.json({ status: 4, userId: req.session.userId });
             } else {
-                console.log("rows: ", rows);
-                res.json(rows[0]);
+                res.json({ status: 2, userId: req.session.userId });
             }
         })
         .catch((err) => {
-            "err", err;
+            console.log("err", err);
         });
+});
+
+app.post("/api/postfriendship", (req, res) => {
+    console.log("POST request /postfriendship");
+    const { otherUserId, friendshipStatus } = req.body;
+    console.log("otherUserId: ", otherUserId);
+    console.log("friendshipStatus: ", friendshipStatus);
+
+    console.log("req.session.userId: ", req.session.userId);
+    if (friendshipStatus === 1) {
+        //no friends to pending friends
+        db.makeFalse(req.session.userId, otherUserId)
+            .then(({ rows }) => {
+                console.log("make false: ", rows);
+                if (rows[0].sender_id == req.session.userId) {
+                    res.json({ status: 3 });
+                } else {
+                    res.json({ status: 2 });
+                }
+            })
+            .catch((err) => {
+                console.log("err", err);
+            });
+    } else if (friendshipStatus === 2) {
+        db.makeTrue(req.session.userId, otherUserId)
+            .then(({ rows }) => {
+                console.log("make true: ", rows);
+                res.json({ status: 4 });
+            })
+            .catch((err) => {
+                console.log("err", err);
+            });
+    } else if (friendshipStatus === 4 || friendshipStatus === 3) {
+        db.deleteFriend(req.session.userId, otherUserId)
+            .then(({ rows }) => {
+                console.log("deleting: ", rows);
+                res.json({ status: 1 });
+            })
+            .catch((err) => {
+                console.log("err", err);
+            });
+    }
 });
 
 app.post("/upload", uploader.single("file"), s3.upload, (req, res) => {
     console.log("/upload got hit");
-    console.log("req.file: ", req.file);
-    console.log("req.session: ", req.session);
     db.addImage(
         req.session.userId,
         `https://s3.amazonaws.com/spicedling/${req.file.filename}`

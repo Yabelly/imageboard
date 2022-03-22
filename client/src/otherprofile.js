@@ -9,6 +9,7 @@ export function OtherProfile() {
 
     const { otherUserId } = useParams();
     const history = useHistory();
+    
 
     useEffect(() => {
         let abort = false;
