@@ -87,6 +87,26 @@ app.get("/api/otheruser/:otheruserid", (req, res) => {
     }
 });
 
+app.get("/api/friends-wannabees", (req, res) => {
+    db.allFriendsAndWannabees(req.session.userId)
+        .then(({ rows }) => {
+            console.log("rows: ", rows);
+
+            res.json(rows);
+        })
+
+        .catch((err) => {
+            console.log("err: ", err);
+        });
+});
+
+app.post(`/api/acceptingfriend/:id`, (req, res) => {
+    db.makeTrue(req.session.userId, req.params.id).then(({ rows }) => {
+        console.log("rows: ", rows);
+        res.json(rows[0]);
+    });
+});
+
 app.get("/api/friendshipstatus/:otheruserid", (req, res) => {
     console.log(
         "GET request /api/friendshipstatus/otheruserid: ",

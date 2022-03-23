@@ -7,7 +7,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { FindPeople } from "./findpeople.js";
 import { OtherProfile } from "./otherprofile.js";
 import { Link } from "react-router-dom";
-
+import { FriendsAndWannabees } from "./friendsandwannabees.js";
 
 export class App extends Component {
     constructor() {
@@ -76,9 +76,13 @@ export class App extends Component {
                     </header>
                     <nav>
                         <h3>Go to</h3>
-                        <Link to="/">home</Link> <br></br>
+                        <Link to="/">home</Link>
+                        <br></br>
                         <Link to="/users/">find users</Link>
                         <br></br>
+                        <Link to="/friends-and-wannabees">
+                            (soon to be) friends{" "}
+                        </Link>
                     </nav>
                     <div className="profile-area">
                         {this.state.uploaderVisible && (
@@ -87,6 +91,9 @@ export class App extends Component {
                                 updateProfilePic={this.updateProfilePic}
                             />
                         )}
+                        <Route exact path="/friends-and-wannabees">
+                            <FriendsAndWannabees></FriendsAndWannabees>
+                        </Route>
                         <Route exact path="/">
                             <Profile
                                 url={this.state.profilePic}
