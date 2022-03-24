@@ -5,62 +5,120 @@ import {
     makeFriend,
     deleteFriend,
 } from "./redux/friends/slice.js";
+import { Link } from "react-router-dom";
 
 export function FriendsAndWannabees() {
     const dispatch = useDispatch();
 
-    const wannabees = useSelector(
+    let wannabees = useSelector(
         (state) =>
-            state.FriendsAndWannabees &&
-            state.FriendsAndWannabees.filter(
-                (friendship) => !friendship.accepted
-            )
+            state.friends &&
+            state.friends.filter((friendship) => !friendship.accepted)
     );
-    const friends = useSelector(
-        (state) =>
-            state.FriendsAndWannabees &&
-            state.FriendsAndWannabees.filter(
-                (friendship) => friendship.accepted
-            )
-    );
-    console.log("state.friends: ", friends);
 
-    console.log("wannabees: ", wannabees);
+    let friends = useSelector(
+        (state) =>
+            state.friends &&
+            state.friends.filter((friendship) => friendship.accepted)
+    );
+    console.log("friends: ", friends);
 
     useEffect(() => {
         fetch("/api/friends-wannabees")
             .then((resp) => resp.json())
             .then((data) => {
-                console.log("data all friendsAndWannabees: ", data);
                 dispatch(recieveFriends(data));
-            }, []);
-    });
+            });
+    }, []);
 
-    const handleAccept = (id) => {
-        fetch(`/api/acceptingfriend/${id}`)
+    function handleAccept(id) {
+        console.log("i am running: ");
+        fetch(`/api/acceptingfriend/${id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+        })
             .then((resp) => resp.json())
             .then((data) => {
                 console.log("data accepting friend: ", data);
-                dispatch(makeFriend(data.id));
+                dispatch(makeFriend(data.sender_id));
             });
-    };
+    }
 
-    const handleDeny = (id) => {
-        fetch(`/api/denyfriend/${id}`)
+    function handleDeny(id) {
+        console.log("i am running: ");
+
+        fetch(`/api/denyfriend/${id}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+        })
             .then((resp) => resp.json())
             .then((data) => {
-                console.log("data accepting friend: ", data);
-                dispatch(deleteFriend(data.id));
+                if (data.success) {
+                    dispatch(deleteFriend(id));
+                }
             });
-    };
-
-    console.log("friends: ", friends);
+    }
 
     return (
         <>
             <div>
-                <h1>FriendsAndWannabees</h1>
-                {friends.first}
+                {wannabees.length == 0 && (
+                    <div>
+                        <h4>No friend requests available</h4>
+                    </div>
+                )}
+                {wannabees.length > 0 && (
+                    <div>
+                        <h3>These people want to be friends:</h3>{" "}
+                    </div>
+                )}
+                <div className="grid">
+                    {wannabees.map((user) => (
+                        <div key={user.id} className="profile">
+                            <div className="username">
+                                {user.first}&nbsp;
+                                {user.last}
+                            </div>
+                            <Link to={`/user/${user.id}`}>
+                                <div className="profile-image">
+                                    <img src={user.profile_pic}></img>
+                                </div>
+                            </Link>
+                            <button onClick={() => handleAccept(user.id)}>
+                                accept friendship
+                            </button>
+                        </div>
+                    ))}
+                </div>
+                <h1>Friends</h1>
+                {friends.length == 0 && (
+                    <div>
+                        <h4>No friends available</h4>
+                    </div>
+                )}
+                {friends.length > 0 && (
+                    <div>
+                        <h4>Your friends:</h4>{" "}
+                    </div>
+                )}
+                <div className="grid">
+                    {friends.map((user) => (
+                        <div key={user.id} className="profile">
+                            <div className="username">
+                                {user.first}&nbsp;
+                                {user.last}
+                            </div>
+                            <Link to={`/user/${user.id}`}>
+                                <div className="profile-image">
+                                    <img src={user.profile_pic}></img>
+                                </div>
+                            </Link>
+                            <button onClick={() => handleDeny(user.id)}>
+                                stop friendship
+                            </button>
+                        </div>
+                    ))}
+                </div>
             </div>
         </>
     );

@@ -4,15 +4,31 @@ export default function friendsWannabeesReducer(friends = [], action) {
     if (action.type == "friends-and-wannabees/received") {
         friends = action.payload.friends;
     } else if (action.type === "friends-and-wannabees/accept") {
-        friends = action.map((friends) => {
-            if (friends.id === action.payload.id) {
+        console.log("friends: ", friends);
+        console.log("action num: ", action);
+
+        const newFriends = friends.map((friend) => {
+            if (friend.id === action.payload.id) {
                 return {
-                    friends,
+                    ...friend,
+                    accepted: true,
                 };
             }
+            return friend;
         });
+        console.log("newFriends: ", newFriends);
+
+        return newFriends;
     } else if (action.type === "friends-and-wannabees/unfriends") {
-        //
+        console.log("friends: ", friends);
+        console.log("action num: ", action);
+
+        const newFriends = friends.filter(
+            (friend) => friend.id != action.payload.id
+        );
+        console.log("newFriends: ", newFriends);
+
+        return newFriends;
     }
     return friends;
 }

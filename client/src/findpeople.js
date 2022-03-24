@@ -30,6 +30,8 @@ export function FindPeople() {
             }
         })();
     }, [searchTerm]);
+
+    
     return (
         <section>
             <h3>Find other users!</h3>

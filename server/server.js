@@ -90,9 +90,9 @@ app.get("/api/otheruser/:otheruserid", (req, res) => {
 app.get("/api/friends-wannabees", (req, res) => {
     db.allFriendsAndWannabees(req.session.userId)
         .then(({ rows }) => {
-            console.log("rows: ", rows);
+            // console.log("rows: ", rows);
 
-            res.json(rows);
+            return res.json(rows);
         })
 
         .catch((err) => {
@@ -101,9 +101,19 @@ app.get("/api/friends-wannabees", (req, res) => {
 });
 
 app.post(`/api/acceptingfriend/:id`, (req, res) => {
+    console.log("req.params: ", req.params);
+
     db.makeTrue(req.session.userId, req.params.id).then(({ rows }) => {
         console.log("rows: ", rows);
-        res.json(rows[0]);
+        return res.json(rows[0]);
+    });
+});
+
+app.post("/api/denyfriend/:id", (req, res) => {
+    console.log("req.params: ", req.params);
+
+    db.deleteFriend(req.session.userId, req.params.id).then(() => {
+        return res.json({ success: true });
     });
 });
 
