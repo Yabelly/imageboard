@@ -329,10 +329,27 @@ io.on("connection", async (socket) => {
     if (!socket.request.session.userId) {
         return socket.disconnect(true);
     }
-    console.log("socket.id: ", socket.id);
+    const { rows } = await db.getLatestMessages();
+    socket.emit(`chatMessages`, rows);
 
-    socket.emit("hello", "welcome to the chatroom!");
-    socket.on("chatmessage", (data) => {
-        console.log("data: ", data);
+    const { userId } = socket.request.session;
+    socket.on("chatmessage", (message) => {
+        console.log("message: ", message);
+        let thing;
+        db.newChatMessage(userId, message)
+            .then(({ rows }) => {
+                console.log("rows newChatMessage: ", rows);
+                thing = rows[0].timestamp;
+                return db.getUserInfo(userId);
+            })
+            .then(({ rows }) => {
+                console.log("rows find userby id: ", rows);
+                console.log("message: ", message);
+                rows[0].message = message;
+                rows[0].timestamp = thing;
+                console.log("rows[0]: ", rows[0]);
+
+                io.emit("chatMessageFromServer", rows[0]);
+            });
     });
 });

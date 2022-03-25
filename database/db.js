@@ -204,3 +204,27 @@ module.exports.allFriendsAndWannabees = (userId) => {
         [userId]
     );
 };
+
+module.exports.newChatMessage = (userId, message) => {
+    return db.query(
+        `
+        INSERT INTO chatbox (sender_id, message)
+        VALUES ($1, $2)
+        RETURNING chatbox.sender_id, chatbox.message, chatbox.timestamp
+
+        `,
+        [userId, message]
+    );
+};
+module.exports.getLatestMessages = () => {
+    return db.query(
+        `
+        SELECT chatbox.sender_id, chatbox.message, chatbox.timestamp, users.id, users.first, users.last, users.profile_pic, users.bio
+        FROM users
+        INNER JOIN chatbox
+        ON users.id = chatbox.sender_id
+        ORDER BY chatbox.id DESC
+        LIMIT 10
+        `
+    );
+};

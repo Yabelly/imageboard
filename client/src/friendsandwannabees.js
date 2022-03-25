@@ -32,7 +32,6 @@ export function FriendsAndWannabees() {
     }, []);
 
     function handleAccept(id) {
-        console.log("i am running: ");
         fetch(`/api/acceptingfriend/${id}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

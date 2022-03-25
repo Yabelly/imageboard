@@ -20,5 +20,8 @@ export const init = (store) => {
         socket.on("chatMessage", (msg) =>
             store.dispatch(chatMessageReceived(msg))
         );
+        socket.on("chatMessageFromServer", (msg) =>
+            store.dispatch(chatMessageReceived(msg))
+        );
     }
 };

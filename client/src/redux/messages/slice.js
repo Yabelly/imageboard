@@ -2,16 +2,16 @@ export default function messagesReducer(messages = [], action) {
     console.log("action: ", action);
 
     if (action.type == "latest-messages/recieved") {
-        return (messages = action.payload.chatMessagesHistory);
+        messages = action.payload.chatMessagesHistory;
     } else if (action.type == "new-message/recieved") {
-        return (messages = [action.payload.lastMessage, ...messages]);
+        return [action.payload.lastMessage, ...messages];
     }
     return messages;
 }
 
 export function recieveLastMessages(chatMessagesHistory) {
     return {
-        type: "friends-and-wannabees/received",
+        type: "latest-messages/recieved",
         payload: { chatMessagesHistory },
     };
 }
