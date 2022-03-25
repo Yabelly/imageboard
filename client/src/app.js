@@ -8,6 +8,7 @@ import { FindPeople } from "./findpeople.js";
 import { OtherProfile } from "./otherprofile.js";
 import { Link } from "react-router-dom";
 import { FriendsAndWannabees } from "./friendsandwannabees.js";
+import Chat from "./chat.js";
 
 export class App extends Component {
     constructor() {
@@ -83,6 +84,8 @@ export class App extends Component {
                         <Link to="/friends-and-wannabees">
                             (soon to be) friends{" "}
                         </Link>
+                        <br></br>
+                        <Link to="/chatroom">chatroom</Link>
                     </nav>
                     <div className="profile-area">
                         {this.state.uploaderVisible && (
@@ -111,6 +114,9 @@ export class App extends Component {
                             <OtherProfile />
                         </Route>
                     </div>
+                    <Route path="/chatroom">
+                        <Chat></Chat>
+                    </Route>
                 </BrowserRouter>
             </div>
         );

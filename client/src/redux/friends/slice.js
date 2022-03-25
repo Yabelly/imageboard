@@ -4,9 +4,6 @@ export default function friendsWannabeesReducer(friends = [], action) {
     if (action.type == "friends-and-wannabees/received") {
         friends = action.payload.friends;
     } else if (action.type === "friends-and-wannabees/accept") {
-        console.log("friends: ", friends);
-        console.log("action num: ", action);
-
         const newFriends = friends.map((friend) => {
             if (friend.id === action.payload.id) {
                 return {

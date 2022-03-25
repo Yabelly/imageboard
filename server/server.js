@@ -21,23 +21,29 @@ const diskStorage = multer.diskStorage({
         });
     },
 });
-console.log("");
 const uploader = multer({
     storage: diskStorage,
     limits: {
         fileSize: 2000000,
     },
 });
+const server = require("http").Server(app);
+const io = require("socket.io")(server, {
+    allowRequest: (req, callback) =>
+        callback(null, req.headers.referer.startsWith("http://localhost:3000")),
+});
 
 app.use(compression());
 app.use(express.static(path.join(__dirname, "..", "client", "public")));
-app.use(
-    cookieSession({
-        secret: `ultra extreme secure thing`,
-        maxAge: 1000 * 60 * 60 * 24 * 14,
-        sameSite: true,
-    })
-);
+const cookieSessionMiddleware = cookieSession({
+    secret: `ultra extreme secure thing`,
+    maxAge: 1000 * 60 * 60 * 24 * 14,
+    sameSite: true,
+});
+app.use(cookieSessionMiddleware);
+io.use(function (socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
 app.use(express.json());
 
 // // app.use((req, res, next) => {
@@ -104,7 +110,6 @@ app.post(`/api/acceptingfriend/:id`, (req, res) => {
     console.log("req.params: ", req.params);
 
     db.makeTrue(req.session.userId, req.params.id).then(({ rows }) => {
-        console.log("rows: ", rows);
         return res.json(rows[0]);
     });
 });
@@ -316,6 +321,18 @@ app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "..", "client", "index.html"));
 });
 
-app.listen(process.env.PORT || 3001, function () {
+server.listen(process.env.PORT || 3001, function () {
     console.log("I'm listening.");
+});
+
+io.on("connection", async (socket) => {
+    if (!socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+    console.log("socket.id: ", socket.id);
+
+    socket.emit("hello", "welcome to the chatroom!");
+    socket.on("chatmessage", (data) => {
+        console.log("data: ", data);
+    });
 });
