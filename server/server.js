@@ -317,6 +317,9 @@ app.get("/user/id.json", function (req, res) {
     });
 });
 
+app.get("/")
+
+
 app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "..", "client", "index.html"));
 });

@@ -1,9 +1,9 @@
 body {
-    background-color: orange;
+    background-color: #c9b1bd;
 }
 
 header {
-    background-color: aquamarine;
+    background-color: #b49594;
     display: flex;
     justify-content: space-between;
     height: 100px;
@@ -25,25 +25,35 @@ header {
     align-items: flex-end;
 }
 .chatinput {
-    background-color: white;
+    background-color: #d5dfe5;
     width: 300px;
     height: 50px;
 }
-
+.profile-pic {
+    max-width: 200px;
+}
 .message-area {
-    background-color: whitesmoke;
-    width: 500px;
-    height: 300px;
-    border: 5px solid black;
+    background-color: #b49594;
+    width: 700px;
+    height: 500px;
+    border: 5px solid #567568;
     display: flex;
     flex-direction: column-reverse;
     overflow: scroll;
+}
+.chatmessage {
+    height: 50px;
+    margin: 3px;
 }
 
 .header-logo {
     display: inline;
 }
 
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
 header img {
     max-width: 100%;
     max-height: 100%;
@@ -55,7 +65,7 @@ header img {
     top: 200px;
     left: 200px;
     background-color: white;
-    border: 5px solid black;
+    border: 5px solid #567568;
     height: 100px;
     width: 300px;
     display: flex;
@@ -69,5 +79,5 @@ header img {
     background-color: black;
     top: 0;
     right: 0;
-    color: white;
+    color: #7f9172;
 }
