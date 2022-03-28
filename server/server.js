@@ -298,6 +298,7 @@ app.post("/login.json", (req, res) => {
                     if (match) {
                         req.session.userId = val.rows[0].id;
                         res.json({ success: true });
+                      
                     } else {
                         res.json({ success: false });
                     }
@@ -317,8 +318,7 @@ app.get("/user/id.json", function (req, res) {
     });
 });
 
-app.get("/")
-
+app.get("/");
 
 app.get("*", function (req, res) {
     res.sendFile(path.join(__dirname, "..", "client", "index.html"));
