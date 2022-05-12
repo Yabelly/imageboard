@@ -5,7 +5,7 @@ import { FriendButton } from "./friendbutton";
 
 export function OtherProfile() {
     const [otherUser, setOtherUser] = useState([]);
-    // const [error, setError] = useState(false); // can do this later if need be
+  
 
     const { otherUserId } = useParams();
     const history = useHistory();

@@ -14,7 +14,7 @@ export class Registration extends Component {
     }
 
     inputUpdate({ target }) {
-        //this func takes an object containging state update that we want to run an optional 2nd arg that is a callback func
+        
         this.setState(
             {
                 [target.name]: target.value,
